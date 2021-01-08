@@ -96,6 +96,7 @@ class LegacyGauss(GaussianModel):
         turbine_coord,
         deflection_field,
         flow_field,
+        wake_expansion=None,
     ):
         """
         Using the Gaussian wake model, this method calculates and
@@ -196,8 +197,13 @@ class LegacyGauss(GaussianModel):
         # velDef[x_locations > x0] = 0
 
         # wake expansion in the lateral (y) and the vertical (z)
-        ky = self.ka * TI + self.kb  # wake expansion parameters
-        kz = self.ka * TI + self.kb  # wake expansion parameters
+        if wake_expansion is None:
+            ky = self.ka * TI + self.kb  # wake expansion parameters
+            kz = self.ka * TI + self.kb  # wake expansion parameters
+        else:
+            ky = wake_expansion
+            kz = wake_expansion
+
         sigma_y1 = ky * (x_locations - x0) + sigma_y0
         sigma_z1 = kz * (x_locations - x0) + sigma_z0
         # sigma_y1[x_locations < x0] = sigma_y0[x_locations < x0]

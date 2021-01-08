@@ -71,7 +71,7 @@ class FlorisInterface(LoggerBase):
         self.floris = Floris(input_file=input_file, input_dict=input_dict)
 
     def calculate_wake(
-        self, yaw_angles=None, no_wake=False, points=None, track_n_upstream_wakes=False
+        self, yaw_angles=None, no_wake=False, points=None, track_n_upstream_wakes=False, wake_expansion=None
     ):
         """
         Wrapper to the :py:meth:`~.Farm.set_yaw_angles` and
@@ -97,6 +97,7 @@ class FlorisInterface(LoggerBase):
             no_wake=no_wake,
             points=points,
             track_n_upstream_wakes=track_n_upstream_wakes,
+            wake_expansion=wake_expansion
         )
 
     def reinitialize_flow_field(
@@ -259,6 +260,7 @@ class FlorisInterface(LoggerBase):
         x3_value=100,
         x1_bounds=None,
         x2_bounds=None,
+        wake_expansion=None
     ):
         """
         Calculates velocity values through the
@@ -340,7 +342,7 @@ class FlorisInterface(LoggerBase):
             points = np.row_stack((x3_array, x1_array, x2_array))
 
         # Recalculate wake with these points
-        flow_field.calculate_wake(points=points)
+        flow_field.calculate_wake(points=points, wake_expansion=wake_expansion)
 
         # Get results vectors
         x_flat = flow_field.x.flatten()
@@ -470,6 +472,7 @@ class FlorisInterface(LoggerBase):
         y_resolution=200,
         x_bounds=None,
         y_bounds=None,
+        wake_expansion=None
     ):
         """
         Shortcut method to instantiate a :py:class:`~.tools.cut_plane.CutPlane`
@@ -506,6 +509,7 @@ class FlorisInterface(LoggerBase):
             x3_value=height,
             x1_bounds=x_bounds,
             x2_bounds=y_bounds,
+            wake_expansion=wake_expansion
         )
 
         # Compute and return the cutplane

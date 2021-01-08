@@ -94,7 +94,7 @@ class Gauss(VelocityDeflection):
         self.eps_gain = model_dictionary["eps_gain"]
 
     def function(
-        self, x_locations, y_locations, z_locations, turbine, coord, flow_field
+        self, x_locations, y_locations, z_locations, turbine, coord, flow_field, wake_expansion=None
     ):
         """
         Calculates the deflection field of the wake. See
@@ -170,8 +170,12 @@ class Gauss(VelocityDeflection):
         )
 
         # wake expansion parameters
-        ky = ka * TI + kb
-        kz = ka * TI + kb
+        if wake_expansion is None:
+            ky = ka * TI + kb
+            kz = ka * TI + kb
+        else:
+            ky = wake_expansion
+            kz = wake_expansion
 
         C0 = 1 - u0 / wind_speed
         M0 = C0 * (2 - C0)
